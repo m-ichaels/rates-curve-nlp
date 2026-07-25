@@ -1,0 +1,7 @@
+build/
+storage/
+data/raw/
+__pycache__/
+*.pyc
+results/parts/
+results/*.log

@@ -1,0 +1,42 @@
+Treasury CMT
+  CMT 2015 251 days
+  CMT 2016 250 days
+  CMT 2017 250 days
+  CMT 2018 249 days
+  CMT 2019 250 days
+  CMT 2020 251 days
+  CMT 2021 251 days
+  CMT 2022 249 days
+  CMT 2023 250 days
+  CMT 2024 250 days
+  CMT 2025 249 days
+  CMT 2026 177 days
+NY Fed
+  NY Fed rates 12219 rows
+   https://markets.newyorkfed.org/api/rp/repo/all/results/search.csv?startDate=2021-07-01&end 400
+   https://markets.newyorkfed.org/api/rp/repo/all/results/search.csv?startDate=2021-07-01&end 400
+   https://markets.newyorkfed.org/api/rp/repo/all/results/search.csv?startDate=2021-07-01&end 400
+   https://markets.newyorkfed.org/api/rp/all/all/results/search.csv?startDate=2021-07-01&endD 400
+   https://markets.newyorkfed.org/api/rp/all/all/results/search.csv?startDate=2021-07-01&endD 400
+   https://markets.newyorkfed.org/api/rp/all/all/results/search.csv?startDate=2021-07-01&endD 400
+FOMC
+  FOMC statements 99
+ECB
+  ECB statements 94
+SF Fed
+  USMPD.xlsx 197257
+CFTC
+  CFTC TFF 2015
+  CFTC TFF 2016
+  CFTC TFF 2017
+  CFTC TFF 2018
+  CFTC TFF 2019
+  CFTC TFF 2020
+  CFTC TFF 2021
+  CFTC TFF 2022
+  CFTC TFF 2023
+  CFTC TFF 2024
+  CFTC TFF 2025
+  CFTC TFF 2026
+auctions
+  auctions 4377
