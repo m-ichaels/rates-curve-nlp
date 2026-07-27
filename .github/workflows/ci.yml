@@ -1,0 +1,15 @@
+name: ci
+on: [push, pull_request]
+jobs:
+  build-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: sudo apt-get update && sudo apt-get install -y cmake ninja-build g++
+      - run: cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=Release && cmake --build build
+      - run: ./build/rcmm_tests
+      - name: synthetic pipeline on the checked-in CMT sample (no downloads)
+        run: |
+          ./build/rcmm curve --date 2025-04-14 --cmt data/sample/treasury_cmt_sample.csv --out ci_curve.json
+          ./build/rcmm factors --cmt data/sample/treasury_cmt_sample.csv --windows 2024-01-01:2026-12-31 --out ci_factors.json
+          ./build/rcmm mm --cmt data/sample/treasury_cmt_sample.csv --train 2024-01-01:2026-12-31 --days 3 --seeds 1 --gammas 2e-6 --quoters Bergault,BarzykinCiceri_QAHR --out ci_mm.json
