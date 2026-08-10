@@ -1,0 +1,26 @@
+[project]
+name = "rcmm"
+version = "0.1.0"
+description = "rates-curve-nlp: numpy reference curve engine, factor model, results loaders and statistics"
+requires-python = ">=3.10"
+dependencies = ["numpy>=1.24", "pandas>=2.0"]
+
+[project.optional-dependencies]
+pipeline = ["matplotlib", "requests", "openpyxl", "fpdf2"]
+text = ["torch", "transformers", "sentence-transformers"]
+test = ["pytest>=7"]
+
+[project.scripts]
+rcmm-py = "rcmm.cli:main"
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["python"]
+
+[tool.pytest.ini_options]
+testpaths = ["python/tests"]
+pythonpath = ["python"]
+addopts = "-q"
