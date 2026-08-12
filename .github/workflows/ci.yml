@@ -13,3 +13,8 @@ jobs:
           ./build/rcmm curve --date 2025-04-14 --cmt data/sample/treasury_cmt_sample.csv --out ci_curve.json
           ./build/rcmm factors --cmt data/sample/treasury_cmt_sample.csv --windows 2024-01-01:2026-12-31 --out ci_factors.json
           ./build/rcmm mm --cmt data/sample/treasury_cmt_sample.csv --train 2024-01-01:2026-12-31 --days 3 --seeds 1 --gammas 2e-6 --quoters Bergault,BarzykinCiceri_QAHR --out ci_mm.json
+      - name: Python reference implementation agrees with the C++ it just built
+        run: |
+          pip install numpy pandas pytest
+          python -m pytest
+          PYTHONPATH=python python -m rcmm compare --cpp ci_curve.json --cmt data/sample/treasury_cmt_sample.csv --tol 1e-3
