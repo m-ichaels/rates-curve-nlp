@@ -8,7 +8,7 @@
 - *Text (NLP).* FOMC-RoBERTa hawkishness of the statement, changed versus the previous one, nowcasts the 2y event-window move out of sample: corr 0.34 (bootstrap CI [0.09, 0.54], n = 44 events in 2024–26, permutation p = 0.022), R² 9 %; 5y 0.27, 10y 0.16, 30y nil. The front end is where the text bites. A lexicon gets 0.13 (not significant) and sentence embeddings + ridge get nothing (-0.03) at n ≈ 150 — the model that read 25 years of Fed language beats both. The dated-checkpoint split shows no look-ahead (corr 0.27 inside the model's training period vs 0.48 after its checkpoint).
 - *Quotes and events.* On synthetic days the closed forms behave as the papers say (Bergault's factor skew cuts the 5-minute P&L std by 27 % at equal P&L); on the 2024–26 replay (676 real days, 186 event days, measured USMPD jumps on FOMC days) the calendar feature — widen the informed tier in the 30 minutes before a scheduled event — adds +1.0 % P&L and +1.8 % P&L per unit variance, and the text nowcast, used only in the 30 minutes *after* release, adds -0.2 %: statistically real, economically not tradable at this size, exactly the trap the plan warned about.
 
-Literature cut-off June 2026. Header-only C++20 behind one CLI (`rcmm`), Python for downloads, text scoring, figures and the report. 1,831 tests; CI builds with g++ and runs them plus a short pipeline on a checked-in CMT sample.
+Literature cut-off June 2026. Header-only C++20 behind one CLI (`rcmm`) for the daily builds and the replay; a numpy port of the same curve engine and factor model (`python/rcmm`) as the independent reference, plus Python for downloads, text scoring, results loaders, figures and the report. 1,831 C++ tests and 54 Python tests; CI builds with g++, runs both suites, a short pipeline on a checked-in CMT sample, and checks that the Python rebuild of that day's curve agrees with the C++ it just built.
 
 ---
 
@@ -24,10 +24,12 @@ Literature cut-off June 2026. Header-only C++20 behind one CLI (`rcmm`), Python 
 | `src/main.cpp` → `rcmm` | `curve`, `curvehist` (daily builds, LOO, hedge test), `factors`, `mm`, `events` |
 | `tools/hedge_test.py` | learned vs model hedge ratios, walk-forward |
 | `tools/text_features.py`, `tools/nlp_features.py`, `tools/event_features.py` | sentence-level hawkishness (lexicon, FOMC-RoBERTa dated checkpoint, 2026 open re-implementation); redline / novelty / embedding features and the out-of-sample nowcast models with placebos; USMPD reactions, NFP / auction calendar, CFTC and funding-stress features → `data/derived/events.csv`, `results/nlp_signal.json` |
+| `python/rcmm/` | `curve.py`, `factors.py`: numpy port of the curve engine (monotone convex, bootstrap, key-rate DV01s, step front end, kernel ridge) and the PCA factor model, agreeing with the C++ to $10^{-8}$ bp on the bootstrap and $10^{-4}$ bp on the kernel ridge; `data.py`: CMT / NY Fed / statement / derived-table loaders; `results.py`: tidy frames from every `results/*.json` and the headline numbers the README quotes; `stats.py`: bootstrap, paired and block-bootstrap CIs, permutation placebo, ridge, walk-forward, logistic hit model; `cli.py`: `python -m rcmm curve|factors|compare|summary` |
+| `python/tests/` | pytest: sector integrals vs quadrature, repricing, DV01 sums, Sobolev kernel identity, λ trade-off, step recovery, PCA sign conventions and ladder covariance, CI coverage and permutation nulls, every number of `results/curve_2025-04-14.json` and `results/factors.json` re-derived in Python |
 | `tests/tests.cpp` | interpolation and closed-form integrals, repricing, DV01 sums, step fit, PCA, Riccati identity, quote signs, calendar widening, hit-ratio controller, P&L identities, CRN, adverse selection, bridge, release-window signal |
 | `scripts/run_all.sh`, `plots.py`, `summarize.py`, `report.py` | pipeline, figures, `results/summary.md`, `report.pdf`; `notebooks/results.ipynb` |
 
-Build: `./build.ps1` (MSVC + Ninja) or `cmake -S . -B build -G Ninja && cmake --build build`. Python: `numpy pandas matplotlib requests openpyxl fpdf2`, plus `torch transformers sentence-transformers` for the model scorers (the lexicon scorer needs none of them).
+Build: `./build.ps1` (MSVC + Ninja) or `cmake -S . -B build -G Ninja && cmake --build build`; `python -m pytest` for the Python suite (`pip install -e .[test]` or `PYTHONPATH=python`). Python: `numpy pandas matplotlib requests openpyxl fpdf2`, plus `torch transformers sentence-transformers` for the model scorers (the lexicon scorer needs none of them).
 
 ---
 
@@ -186,7 +188,8 @@ The calendar feature is worth +1.0 % of P&L (+1.8 % per unit variance); the nowc
 - $\Gamma D\Gamma = \tfrac{\gamma}{2}\Sigma$ to $10^{-6}$; quotes skew the right way; $\gamma \to 0$ recovers $\arg\max \delta f(\delta)$; calendar widening tested.
 - P&L decomposition sums exactly; 5-minute increments sum to the total; identical quotes on the same seed give identical P&L (common random numbers).
 - Text: models and commit hashes in `results/nlp_signal.json` and `data/derived/text_models.json`; a statement's text is used only from its release (the earlier arm used it 30 minutes before release; that was a leak and was fixed); λ and the feature set for the replay are chosen inside the training window; FOMC-RoBERTa scored inside and after its training period separately; replay with and without 2020–22 in the factor model.
-- 1,831 tests; CI.
+- Two implementations of the curve: the C++ that produced the numbers and an independent numpy port, compared number by number on a checked-in day (`python -m rcmm compare`) and in CI on the day it just built.
+- 1,831 C++ tests, 54 Python tests; CI.
 
 ## Traps stated
 
