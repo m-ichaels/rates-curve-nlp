@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Full pipeline: data -> curve (daily builds, LOO, hedge test) -> factors -> closed-form frontier -> text/NLP/event features
-# -> real-day replay -> figures -> summary -> report.   Usage: scripts/run_all.sh [--skip-download] [--skip-text]
+# -> real-day replay -> figures -> summary.   Usage: scripts/run_all.sh [--skip-download] [--skip-text]
 set -euo pipefail
 B=./build/rcmm; [[ -x $B.exe ]] && B=$B.exe
 export HF_HOME="${HF_HOME:-$PWD/storage/hf}"
@@ -20,5 +20,4 @@ $EV --exclude-2020-22 --out results/events_ex2020.json > results/events_ex2020.l
 ./build/rcmm_tests | tee results/tests.txt
 python scripts/plots.py results results/figures
 python scripts/summarize.py results
-python scripts/report.py results report.pdf
 echo done
