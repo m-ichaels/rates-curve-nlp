@@ -1,6 +1,6 @@
 # rates-curve-nlp
 
-Machine-learned Treasury curves for pricing, hedging and quoting, in header-only C++20 with a numpy port of the curve engine as an independent check. Tested out of sample on 2015–2026 Treasury yields and on FOMC and ECB statements.
+Machine-learned Treasury curves for pricing, hedging and quoting, in header-only C++ with a numpy port of the curve engine as an independent check. Tested out of sample on 2015–2026 Treasury yields and on FOMC and ECB statements.
 
 The question: does machine learning beat the classical answers (a Hagan–West bootstrap for the curve, key-rate DV01s for the hedge, a word list for the text), and does any of it pay in an RFQ simulator with informed flow and scheduled events?
 
